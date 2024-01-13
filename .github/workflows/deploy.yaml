@@ -1,0 +1,28 @@
+name: Deploy backend
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        script: |
+          #!/bin/bash
+          set -o errexit
+
+          cd /opt/aws-video-backend || { echo "No directory found"; exit 1; }
+
+          git pull
+          npm i
+          npm run build 
+          pm2 reload aws-video
