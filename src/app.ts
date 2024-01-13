@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
+import fileUpload from 'express-fileupload';
 import { errorHandler } from './middlewares/errors';
 import { router } from './routes';
 
@@ -9,6 +10,12 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: '/tmp/',
+  }),
+);
 
 app.use(router);
 app.use('*', (req, res) => {
