@@ -1,12 +1,10 @@
 import express from 'express';
-import { userRouter } from './users';
+import { authRouter } from './users';
+import { videosRouter } from './videos';
 
 const router = express.Router();
 
-router.use('/users/', userRouter);
-
-router.get('/', function (req, res, next) {
-  res.json({ title: 'Express' });
-});
+router.use('/auth/', authRouter);
+router.use('/videos/', videosRouter);
 
 export { router };

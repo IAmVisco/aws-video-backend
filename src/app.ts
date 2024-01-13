@@ -1,8 +1,9 @@
 import 'dotenv/config';
 import express from 'express';
+import { errorHandler } from './middlewares/errors';
 import { router } from './routes';
 
-const port = parseInt(process.env.PORT!, 10) ?? 3000;
+const port = parseInt(process.env.PORT as string, 10) ?? 3000;
 
 const app = express();
 
@@ -13,9 +14,8 @@ app.use(router);
 app.use('*', (req, res) => {
   res.status(404).json({ error: 'Not found' });
 });
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`Running on http://localhost:${port}`);
 });
-
-module.exports = app;
