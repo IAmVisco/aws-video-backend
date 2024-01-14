@@ -8,8 +8,12 @@ const SALT_ROUNDS = 10;
 
 class AuthService {
   async createUser(name: string, password: string): Promise<Omit<User, 'passwordHash'>> {
-    const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
+    const userExists = await prisma.user.findUnique({ where: { name } });
+    if (userExists) {
+      throw Boom.forbidden('User exists');
+    }
 
+    const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
     const user = await prisma.user.create({
       data: { name, passwordHash },
       select: { id: true, name: true, createdAt: true },
