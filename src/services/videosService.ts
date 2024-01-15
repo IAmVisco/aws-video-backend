@@ -10,6 +10,7 @@ import {
 import Boom from '@hapi/boom';
 import { Video } from '@prisma/client';
 import { UploadedFile } from 'express-fileupload';
+import getVideoDurationInSeconds from 'get-video-duration';
 import crypto from 'node:crypto';
 import * as fs from 'node:fs';
 
@@ -77,7 +78,7 @@ class VideosService {
 
       const user = await prisma.user.findUniqueOrThrow({ where: { id: userId }, select: { name: true } });
       const totalParts = Math.ceil(video.size / CHUNK_SIZE);
-      const uploadParams = { Bucket: this.bucket, Key: `${user.name}/${fileName}`, ContentType: 'video/mp4' };
+      const uploadParams = { Bucket: this.bucket, Key: `${user.name}/${fileName}`, ContentType: video.mimetype };
       let PartNumber = 1;
       const uploadedPartsResults: CompletedPart[] = [];
 
@@ -120,8 +121,10 @@ class VideosService {
 
       console.log(`Successfully completed multipart uploadId: ${UploadId}`);
 
+      const duration = await getVideoDurationInSeconds(video.tempFilePath);
+
       await prisma.video.create({
-        data: { title, description, fileName, authorId: userId },
+        data: { title, description, fileName, duration, authorId: userId },
       });
     } catch (e) {
       console.error(e);

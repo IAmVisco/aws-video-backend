@@ -15,6 +15,7 @@ model Video {
   title       String   @db.VarChar(255)
   fileName    String   @db.VarChar(255)
   description String?  @db.VarChar(1024)
+  duration    Int?     @db.Integer
   createdAt   DateTime @default(now()) @db.Timestamp(6)
   authorId    String
   User        User     @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
