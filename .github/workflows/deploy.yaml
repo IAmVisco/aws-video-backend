@@ -22,6 +22,8 @@ jobs:
 
           cd /opt/aws-video-backend || { echo "No directory found"; exit 1; }
 
+          git fetch origin master
+          git reset origin/master --hard
           git pull
           npm i
           npx prisma generate
