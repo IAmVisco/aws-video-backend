@@ -24,5 +24,6 @@ jobs:
 
           git pull
           npm i
+          npx prisma generate
           npm run build 
           pm2 reload aws-video
