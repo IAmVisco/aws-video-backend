@@ -10,7 +10,9 @@ const port = parseInt(process.env.PORT as string, 10) ?? 3000;
 const app = express();
 
 app.use(express.json());
-app.use(cors({ origin: ['http://localhost:5173', 'https://videos.iamvis.co'] }));
+app.use(
+  cors({ origin: ['http://localhost:5173', 'https://videos.iamvis.co', 'https://visco-aws-videos.netlify.app'] }),
+);
 app.use(express.urlencoded({ extended: false }));
 app.use(
   fileUpload({
